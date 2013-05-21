@@ -23,37 +23,26 @@ public class VertexBuffer
 	float width;
 	float height;
 	
-	float red;
-	float green;
-	float blue;
-	float transparency;
-	
 	Vertex[] vertices;
-	
 	ByteBuffer byteBuffer;
 	FloatBuffer floatBuffer;
 	
-	public VertexBuffer(float x, float y, float width, float height, float red, float green, float blue, float transparency)
+	public VertexBuffer(float x, float y, float width, float height)
 	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
-		this.transparency = transparency;
 	}
 	
 	public void initialise()
 	{
 		vertices = new Vertex[4];
 		
-		vertices[0] = new Vertex(x, y + height, 0f, 1f, red, green, blue, transparency, 0f, 0f);
-		vertices[1] = new Vertex(x, y, 0f, 1f, red, green, blue, transparency, 0f, 1f);
-		vertices[2] = new Vertex(x + width, y, 0f, 1f, red, green, blue, transparency, 1f, 1f);
-		vertices[3] = new Vertex(x + width, y + height, 0f, 1f, red, green, blue, transparency, 1f, 0f);
+		vertices[0] = new Vertex(x, y + height, 0f, 1f, 1f, 1f, 1f, 1f, 0f, 0f);
+		vertices[1] = new Vertex(x, y, 0f, 1f, 1f, 1f, 1f, 1f, 0f, 1f);
+		vertices[2] = new Vertex(x + width, y, 0f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
+		vertices[3] = new Vertex(x + width, y + height, 0f, 1f, 1f, 1f, 1f, 1f, 1f, 0f);
 		
 		byteBuffer = BufferUtils.createByteBuffer(vertices.length * Vertex.SIZE);
 		floatBuffer = byteBuffer.asFloatBuffer();

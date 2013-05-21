@@ -1,7 +1,14 @@
 package novum.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 public class Graphics
 {
@@ -9,19 +16,11 @@ public class Graphics
 	ShaderProgram shaderProgram;
 	TextureManager textureManager;
 	
-	VertexArray vertexArray;
-	IndexBuffer indexBuffer;
-	VertexBuffer vertexBuffer;
-	
 	public void initialise()
 	{
 		window = new Window(640, 480);
 		shaderProgram = new ShaderProgram("shaders/vertex.shader", "shaders/fragment.shader");
-		textureManager = new TextureManager("res/characters/001-Fighter01.png", "res/characters/002-Fighter02.png");
-		
-		vertexArray = new VertexArray();
-		indexBuffer = new IndexBuffer(0, 1, 2, 2, 3, 0);
-		vertexBuffer = new VertexBuffer(0f, 0f, 1f, 1f, 1f, 1f, 1f, 1f);
+		textureManager = new TextureManager();
 		
 		window.initialise();
 		
@@ -32,12 +31,6 @@ public class Graphics
 		
 		shaderProgram.initialise();
 		textureManager.initialise();
-		
-		vertexArray.initialise();
-		vertexArray.bind();
-		vertexBuffer.initialise();
-		vertexArray.free();
-		indexBuffer.initialise();
 	}
 	
 	public void update()
@@ -45,28 +38,11 @@ public class Graphics
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		textureManager.bind(0);
-		
-		vertexArray.bind();
-		vertexArray.enableAttributes();
-		indexBuffer.bind();
-		
-		glDrawElements(GL_TRIANGLES, indexBuffer.getLength(), GL_UNSIGNED_BYTE, 0);
-		
-		indexBuffer.free();
-		vertexArray.disableAttributes();
-		vertexArray.free();
-		
 		window.update();
 	}
 	
 	public void terminate()
 	{
-		indexBuffer.terminate();
-		vertexArray.bind();
-		vertexBuffer.terminate();
-		vertexArray.free();
-		vertexArray.terminate();
-		
 		textureManager.terminate();
 		shaderProgram.terminate();
 		window.terminate();
@@ -75,5 +51,10 @@ public class Graphics
 	public boolean isCloseRequested()
 	{
 		return window.isCloseRequested();
+	}
+	
+	public void setTexture(int textureID)
+	{
+		textureManager.bind(textureID);
 	}
 }

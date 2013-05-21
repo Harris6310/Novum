@@ -1,8 +1,25 @@
 package novum.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_UNPACK_ALIGNMENT;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glPixelStorei;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,35 +32,28 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
 public class TextureManager
 {
 	static int TEXTURE_UNIT = GL_TEXTURE0;
+	static String CHARACTER_LOCATION = "res/characters/";
 	
-	int characterOneID;
-	int characterTwoID;
-	
-	String characterOneLocation;
-	String characterTwoLocation;
-	
-	public TextureManager(String characterOneLocation, String characterTwoLocation)
-	{
-		this.characterOneLocation = characterOneLocation;
-		this.characterTwoLocation = characterTwoLocation;
-	}
+	int[] characters;
 	
 	public void initialise()
 	{
-		characterOneID = loadTexture(characterOneLocation);
-		characterTwoID = loadTexture(characterTwoLocation);
+		characters = new int[2];
+		
+		characters[0] = loadTexture(CHARACTER_LOCATION + "001-Fighter01.png");
+		characters[1] = loadTexture(CHARACTER_LOCATION + "002-Fighter02.png");
 	}
 	
 	public void terminate()
 	{
-		glDeleteTextures(characterOneID);
-		glDeleteTextures(characterTwoID);
+		glDeleteTextures(characters[0]);
+		glDeleteTextures(characters[1]);
 	}
 	
 	public void bind(int index)
 	{
 		glActiveTexture(TEXTURE_UNIT);
-		glBindTexture(GL_TEXTURE_2D, characterOneID);
+		glBindTexture(GL_TEXTURE_2D, characters[index]);
 	}
 	
 	public int loadTexture(String location)
